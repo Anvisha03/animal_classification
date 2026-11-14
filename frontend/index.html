@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Animal Classification</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>🐾 Animal Classification</h1>
+        <p>Identify an animal from an uploaded image</p>
+    </header>
+
+    <main>
+
+        <div class="upload-box">
+
+            <h2>Upload Animal Image</h2>
+
+            <input
+                type="file"
+                id="imageInput"
+                accept="image/*"
+            >
+
+            <div class="preview-container">
+                <img
+                    id="imagePreview"
+                    src=""
+                    alt="Image Preview"
+                >
+            </div>
+
+            <button id="predictButton">
+                Predict Animal
+            </button>
+
+        </div>
+
+        <div class="result-box">
+
+            <h2>Prediction Result</h2>
+
+            <p id="prediction">
+                Prediction will appear here
+            </p>
+
+            <p id="confidence">
+                Confidence: --
+            </p>
+
+        </div>
+
+    </main>
+
+    <footer>
+        <p>Image-Based Animal Classification Project</p>
+    </footer>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
