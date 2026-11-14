@@ -1,3 +1,4 @@
+
 const imageInput = document.getElementById("imageInput");
 const imagePreview = document.getElementById("imagePreview");
 const predictButton = document.getElementById("predictButton");
@@ -40,7 +41,7 @@ predictButton.addEventListener("click", async function () {
     try {
 
         const response = await fetch(
-            "http://127.0.0.1:5000/predict",
+            "https://animal-classification-kaq8.onrender.com/predict",
             {
                 method: "POST",
                 body: formData
