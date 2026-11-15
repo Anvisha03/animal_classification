@@ -1,70 +1,333 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animal Classifier</title>
 
-    <title>Animal Classification</title>
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-    <header>
-        <h1>🐾 Animal Classification</h1>
-        <p>Identify an animal from an uploaded image</p>
-    </header>
+<!-- Decorative Background Waves & Paws -->
+<div class="bg-decorations" aria-hidden="true">
+    <div class="bg-blob blob-top-left"></div>
+    <div class="bg-blob blob-top-right"></div>
+    <i class="fa-solid fa-paw paw-deco paw-1"></i>
+    <i class="fa-solid fa-paw paw-deco paw-2"></i>
+    <i class="fa-solid fa-paw paw-deco paw-3"></i>
+    <i class="fa-solid fa-paw paw-deco paw-4"></i>
+</div>
 
-    <main>
+<!-- HEADER -->
+<header class="site-header">
+    <a class="brand" href="#home">
+        <i class="fa-solid fa-paw brand-paw"></i>
+        <span>Animal Classifier</span>
+    </a>
 
-        <div class="upload-box">
+    <nav class="main-nav" id="mainNav">
+        <a class="nav-link active" href="#home" data-page="home">
+            <i class="fa-solid fa-house"></i>
+            <span>Home</span>
+        </a>
 
-            <h2>Upload Animal Image</h2>
+        <!-- CLASSES DROPDOWN -->
+        <div class="nav-item-dropdown" id="classesDropdownWrapper">
+            <a class="nav-link" href="#classes" data-page="classes" id="classesNavBtn">
+                <i class="fa-solid fa-layer-group"></i>
+                <span>Classes</span>
+                <i class="fa-solid fa-chevron-down nav-caret"></i>
+            </a>
+            <div class="nav-dropdown-panel classes-dropdown-panel" id="classesDropdownPanel">
+                <div class="dropdown-header">
+                    <strong>64 Supported Animal Classes</strong>
+                    <input type="text" id="navClassSearch" placeholder="Quick search animal..." autocomplete="off">
+                </div>
+                <div class="dropdown-class-list" id="dropdownClassList"></div>
+                <div class="dropdown-footer">
+                    <a href="#classes" data-page="classes" class="view-all-link">View Full 64-Class Directory →</a>
+                </div>
+            </div>
+        </div>
 
-            <input
-                type="file"
-                id="imageInput"
-                accept="image/*"
-            >
+        <!-- MODELS DROPDOWN -->
+        <div class="nav-item-dropdown" id="modelsDropdownWrapper">
+            <a class="nav-link" href="#models" data-page="models" id="modelsNavBtn">
+                <i class="fa-solid fa-brain"></i>
+                <span>Models</span>
+                <i class="fa-solid fa-chevron-down nav-caret"></i>
+            </a>
+            <div class="nav-dropdown-panel models-dropdown-panel" id="modelsDropdownPanel">
+                <div class="dropdown-header">
+                    <strong>AI Architecture</strong>
+                </div>
+                <a href="#models" data-page="models" class="model-dropdown-item">
+                    <div class="model-dd-icon"><i class="fa-solid fa-microchip"></i></div>
+                    <div>
+                        <strong>MobileNetV2</strong>
+                        <small>Lightweight CNN feature extractor</small>
+                    </div>
+                </a>
+                <a href="#models" data-page="models" class="model-dropdown-item">
+                    <div class="model-dd-icon"><i class="fa-solid fa-diagram-project"></i></div>
+                    <div>
+                        <strong>Transfer Learning</strong>
+                        <small>Pre-trained weights fine-tuned on 64 classes</small>
+                    </div>
+                </a>
+            </div>
+        </div>
 
-            <div class="preview-container">
-                <img
-                    id="imagePreview"
-                    src=""
-                    alt="Image Preview"
-                >
+        <a class="nav-link" href="#classifier" data-page="classifier">
+            <i class="fa-solid fa-play"></i>
+            <span>Try It Out</span>
+        </a>
+    </nav>
+
+    <button class="mobile-menu" id="mobileMenu" aria-label="Toggle Menu">
+        <i class="fa-solid fa-bars"></i>
+    </button>
+</header>
+
+<main>
+
+    <!-- 1. HOME PAGE -->
+    <section class="page-section active" id="home">
+        <div class="hero-centered">
+            <div class="hero-title-wrap">
+                <h1>
+                    Image based<br>
+                    <span>Animal Type Classification</span>
+                </h1>
+                <svg class="title-rays" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M12 42L22 14" stroke="#5333B8" stroke-width="5.5" stroke-linecap="round"/>
+                    <path d="M25 48L44 26" stroke="#5333B8" stroke-width="5.5" stroke-linecap="round"/>
+                    <path d="M32 54L52 46" stroke="#5333B8" stroke-width="5.5" stroke-linecap="round"/>
+                </svg>
             </div>
 
-            <button id="predictButton">
-                Predict Animal
-            </button>
-
-        </div>
-
-        <div class="result-box">
-
-            <h2>Prediction Result</h2>
-
-            <p id="prediction">
-                Prediction will appear here
+            <p class="hero-subtitle">
+                Upload an image and let our AI tell you what animal it is![cite: 1]
             </p>
 
-            <p id="confidence">
-                Confidence: --
-            </p>
+            <a class="pill-primary-btn hero-cta-btn" href="#classifier" data-page="classifier">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <span>Get Started</span>
+                <span class="btn-arrow">→</span>
+            </a>
 
+            <!-- Animal Lineup Free Stage (No Boxes) -->
+            <div class="animal-lineup-stage">
+                <div class="lineup-animals">
+                    <div class="lineup-item item-cat">
+                        <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=420&q=85" alt="Cat">
+                    </div>
+                    <div class="lineup-item item-dog">
+                        <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=450&q=85" alt="Golden Retriever Dog">
+                    </div>
+                    <div class="lineup-item item-cow">
+                        <img src="https://images.unsplash.com/photo-1546445317-29f4545e9d53?auto=format&fit=crop&w=450&q=85" alt="Cow">
+                    </div>
+                    <div class="lineup-item item-rabbit">
+                        <img src="https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?auto=format&fit=crop&w=400&q=85" alt="Rabbit">
+                    </div>
+                    <div class="lineup-item item-zebra">
+                        <img src="https://images.unsplash.com/photo-1501706362039-c06b2d715385?auto=format&fit=crop&w=450&q=85" alt="Zebra">
+                    </div>
+                    <div class="lineup-item item-elephant">
+                        <img src="https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?auto=format&fit=crop&w=500&q=85" alt="Elephant">
+                    </div>
+                    <div class="lineup-item item-giraffe">
+                        <img src="https://images.unsplash.com/photo-1547721064-da6cfb341d50?auto=format&fit=crop&w=450&q=85" alt="Giraffe">
+                    </div>
+                    <div class="lineup-item item-penguin">
+                        <img src="https://images.unsplash.com/photo-1551986782-d0169b3f8fa7?auto=format&fit=crop&w=400&q=85" alt="Penguin">
+                    </div>
+                    <div class="lineup-item item-panda">
+                        <img src="https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?auto=format&fit=crop&w=450&q=85" alt="Panda">
+                    </div>
+                </div>
+                <svg class="hero-bottom-wave" viewBox="0 0 1440 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0,45 C320,10 620,95 980,65 C1200,48 1340,70 1440,55 L1440,120 L0,120 Z" fill="#C9BEF7"/>
+                    <path d="M0,75 C380,35 760,110 1140,78 C1290,65 1380,82 1440,72 L1440,120 L0,120 Z" fill="#BDB0F4"/>
+                </svg>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. CLASSIFIER PAGE -->
+    <section class="page-section classifier-page" id="classifier">
+        <div class="classifier-header">
+            <div class="header-paw-badge">
+                <i class="fa-solid fa-paw"></i>
+            </div>
+            <div class="classifier-title-row">
+                <svg class="left-rays" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M48 42L38 14" stroke="#5333B8" stroke-width="5.5" stroke-linecap="round"/>
+                    <path d="M35 48L16 26" stroke="#5333B8" stroke-width="5.5" stroke-linecap="round"/>
+                    <path d="M28 54L8 46" stroke="#5333B8" stroke-width="5.5" stroke-linecap="round"/>
+                </svg>
+                <h1>Upload an Animal Image</h1>
+            </div>
+            <p>Let our AI predict what animal it is!</p>
         </div>
 
-    </main>
+        <div class="classifier-cards-grid">
+            <!-- UPLOAD CARD -->
+            <div class="glass-card upload-card">
+                <div class="dropzone-box" id="uploadArea">
+                    <input type="file" id="imageInput" accept="image/*" hidden>
 
-    <footer>
-        <p>Image-Based Animal Classification Project</p>
-    </footer>
+                    <div id="uploadContent" class="dropzone-inner">
+                        <div class="cloud-upload-circle">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                        </div>
+                        <h3>Drag &amp; Drop an Image Here</h3>
+                        <span class="or-divider">or</span>
+                        <button type="button" class="pill-primary-btn choose-btn" id="browseButton">
+                            <i class="fa-regular fa-image"></i>
+                            <span>Choose Image</span>
+                        </button>
+                        <p class="support-note">Supports: JPG, PNG, JPEG <span>(Max Size: 10MB)</span></p>
+                    </div>
 
-    <script src="script.js"></script>
+                    <div class="preview-container hidden" id="previewContainer">
+                        <img id="imagePreview" alt="Selected animal preview">
+                        <div class="preview-bar">
+                            <span class="preview-file"><i class="fa-solid fa-circle-check"></i> <span id="fileName">image.jpg</span></span>
+                            <button type="button" class="remove-img-btn" id="removeImage" title="Remove image">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
+                <button type="button" class="pill-primary-btn predict-submit-btn" id="predictButton" disabled>
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <span id="buttonText">Predict Animal</span>
+                    <span>→</span>
+                </button>
+            </div>
+
+            <!-- RESULT CARD -->
+            <div class="glass-card result-card">
+                <div class="result-card-top-bar">
+                    <span class="result-pill-header">Prediction Result</span>
+                </div>
+
+                <div id="emptyState" class="result-empty-state">
+                    <div class="empty-paw-circle">
+                        <i class="fa-solid fa-paw"></i>
+                    </div>
+                    <h3>Ready to Identify</h3>
+                    <p>Upload an animal photo on the left and click <strong>Predict Animal</strong> to see the AI classification and details here.</p>
+                </div>
+
+                <div id="loadingState" class="result-loading-state hidden">
+                    <div class="spinner"></div>
+                    <h3>Analyzing Image...</h3>
+                    <p>Running MobileNetV2 Transfer Learning model across 64 animal classes.</p>
+                </div>
+
+                <div id="errorMessage" class="result-error-box hidden"></div>
+
+                <div id="predictionContent" class="prediction-result-body hidden">
+                    <div class="result-split">
+                        <div class="result-photo-box">
+                            <img id="resultImage" alt="Classified animal">
+                        </div>
+
+                        <div class="result-info-box">
+                            <div class="predicted-animal-heading">
+                                <i class="fa-solid fa-paw"></i>
+                                <h2 id="prediction">Cat</h2>
+                            </div>
+
+                            <div class="confidence-pill">
+                                Confidence: <strong id="confidence">98.7%</strong>
+                            </div>
+
+                            <div class="about-animal-block">
+                                <div class="about-animal-title">
+                                    <i class="fa-solid fa-paw"></i>
+                                    <span>About This Animal:</span>
+                                </div>
+                                <p id="animalDescription">
+                                    A cat is a small domesticated carnivorous mammal known for its agility and independence.
+                                </p>
+                            </div>
+
+                            <div class="alt-matches hidden" id="topResults">
+                                <small>Other possible matches:</small>
+                                <div id="predictionList" class="alt-pills"></div>
+                            </div>
+
+                            <button type="button" class="pill-primary-btn try-another-btn" id="tryAgainButton">
+                                <i class="fa-solid fa-rotate"></i>
+                                <span>Try Another Image</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. CLASSES PAGE -->
+    <section class="page-section info-page" id="classes">
+        <div class="section-container">
+            <div class="page-banner">
+                <span class="pill-badge"><i class="fa-solid fa-layer-group"></i> 64 ANIMAL CATEGORIES</span>
+                <h1>Supported Animal Classes</h1>
+                <p>Our deep learning model is trained to classify all 64 animal species listed below.</p>
+                <div class="class-search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="pageClassSearch" placeholder="Filter 64 animal classes...">
+                </div>
+            </div>
+
+            <div class="class-grid" id="classGrid"></div>
+        </div>
+    </section>
+
+    <!-- 4. MODELS PAGE -->
+    <section class="page-section info-page" id="models">
+        <div class="section-container">
+            <div class="page-banner">
+                <span class="pill-badge"><i class="fa-solid fa-brain"></i> DEEP LEARNING ARCHITECTURE</span>
+                <h1>Models Powering Classification</h1>
+                <p>Combining lightweight convolutional feature extraction with domain-adapted Transfer Learning.</p>
+            </div>
+
+            <div class="models-two-col">
+                <article class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-microchip"></i></div>
+                    <span class="feature-tag">MODEL 01 · BACKBONE CNN</span>
+                    <h2>MobileNetV2</h2>
+                    <p>
+                        MobileNetV2 is a high-efficiency convolutional neural network built on inverted residual structures and depthwise separable convolutions. It extracts rich spatial and visual patterns efficiently.
+                    </p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-diagram-project"></i></div>
+                    <span class="feature-tag">MODEL 02 · TRAINING STRATEGY</span>
+                    <h2>Transfer Learning</h2>
+                    <p>
+                        A pre-trained network is adapted to the animal dataset, helping the model learn the target animal categories with high accuracy.
+                    </p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<script src="script.js"></script>
 </body>
-
 </html>
