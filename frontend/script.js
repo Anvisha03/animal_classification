@@ -1,3 +1,4 @@
+
 const API_URL = "https://animal-classification-kaq8.onrender.com/predict";
 
 // DOM Elements
@@ -31,6 +32,12 @@ const resultImage = document.getElementById("resultImage");
 const mobileMenu = document.getElementById("mobileMenu");
 const mainNav = document.getElementById("mainNav");
 
+// About Animal section container
+const aboutAnimalSection =
+    animalDescription?.closest(
+        ".about-animal-card, .about-animal, .animal-info, .description-card"
+    ) || animalDescription?.parentElement;
+
 
 // ANIMAL CLASSES (All 64)
 const animalClasses = [
@@ -49,29 +56,47 @@ const animalClasses = [
     "walrus", "whale", "wolf"
 ];
 
+
+// ANIMAL EMOJIS
 const animalEmoji = {
-    antelope: "🦌", bear: "🐻", beaver: "🦫", bee: "🐝", bison: "🦬", blackbird: "🐦",
-    buffalo: "🐃", butterfly: "🦋", camel: "🐫", cat: "🐱", cheetah: "🐆",
-    chimpanzee: "🐒", chinchilla: "🐭", cow: "🐄", crab: "🦀", crocodile: "🐊",
-    deer: "🦌", dog: "🐶", dolphin: "🐬", donkey: "🫏", duck: "🦆", eagle: "🦅",
-    elephant: "🐘", falcon: "🦅", ferret: "🦦", flamingo: "🦩", fox: "🦊",
-    frog: "🐸", giraffe: "🦒", goat: "🐐", goose: "🪿", gorilla: "🦍",
-    grasshopper: "🦗", hawk: "🦅", hedgehog: "🦔", hippopotamus: "🦛",
-    hyena: "🐕", iguana: "🦎", jaguar: "🐆", kangaroo: "🦘", koala: "🐨",
-    lemur: "🐒", leopard: "🐆", lizard: "🦎", lynx: "🐈", mole: "🐾",
-    mongoose: "🦦", ostrich: "🪶", otter: "🦦", owl: "🦉", panda: "🐼",
-    peacock: "🦚", penguin: "🐧", porcupine: "🦔", raccoon: "🦝", seal: "🦭",
-    sheep: "🐑", snail: "🐌", snake: "🐍", spider: "🕷️", squid: "🦑",
+    antelope: "🦌", bear: "🐻", beaver: "🦫", bee: "🐝",
+    bison: "🦬", blackbird: "🐦", buffalo: "🐃",
+    butterfly: "🦋", camel: "🐫", cat: "🐱",
+    cheetah: "🐆", chimpanzee: "🐒", chinchilla: "🐭",
+    cow: "🐄", crab: "🦀", crocodile: "🐊",
+    deer: "🦌", dog: "🐶", dolphin: "🐬",
+    donkey: "🫏", duck: "🦆", eagle: "🦅",
+    elephant: "🐘", falcon: "🦅", ferret: "🦦",
+    flamingo: "🦩", fox: "🦊", frog: "🐸",
+    giraffe: "🦒", goat: "🐐", goose: "🪿",
+    gorilla: "🦍", grasshopper: "🦗", hawk: "🦅",
+    hedgehog: "🦔", hippopotamus: "🦛", hyena: "🐕",
+    iguana: "🦎", jaguar: "🐆", kangaroo: "🦘",
+    koala: "🐨", lemur: "🐒", leopard: "🐆",
+    lizard: "🦎", lynx: "🐈", mole: "🐾",
+    mongoose: "🦦", ostrich: "🪶", otter: "🦦",
+    owl: "🦉", panda: "🐼", peacock: "🦚",
+    penguin: "🐧", porcupine: "🦔", raccoon: "🦝",
+    seal: "🦭", sheep: "🐑", snail: "🐌",
+    snake: "🐍", spider: "🕷️", squid: "🦑",
     walrus: "🦭", whale: "🐳", wolf: "🐺"
 };
 
+
+// ANIMAL DESCRIPTIONS
 const animalDescriptions = {
     cat: "A cat is a small domesticated carnivorous mammal known for its agility, independence, and sharp retractable claws.",
+
     dog: "A dog is a domesticated carnivorous mammal that typically has a long snout, an acute sense of smell, and a barking voice.",
+
     elephant: "Elephants are large mammals of the family Elephantidae characterized by long trunks, tusks, and massive ears.",
+
     lion: "The lion is a large cat of the genus Panthera native to Africa and India, widely known as the king of the jungle.",
+
     panda: "The giant panda is a bear native to south-central China, easily recognized by its distinctive black patches around its eyes.",
+
     tiger: "The tiger is the largest extant cat species, recognizable by its dark vertical stripes on reddish-orange fur.",
+
     default: "This animal is recognized by our MobileNetV2 Transfer Learning model among 64 supported species."
 };
 
@@ -86,11 +111,14 @@ function titleCase(value) {
 
 // POPULATE CLASSES DIRECTORY GRID & DROPDOWN
 function renderClassesLists(filterText = "") {
+
     const query = filterText.toLowerCase().trim();
+
     const filtered = animalClasses.filter(c => c.includes(query));
 
-    // 1. Full Classes Page Grid
+    // Full Classes Page Grid
     const classGrid = document.getElementById("classGrid");
+
     if (classGrid) {
         classGrid.innerHTML = filtered.map(animal => `
             <div class="class-grid-item" onclick="selectAnimalClass('${animal}')">
@@ -100,8 +128,9 @@ function renderClassesLists(filterText = "") {
         `).join("");
     }
 
-    // 2. Navbar Quick Dropdown List
+    // Navbar Quick Dropdown List
     const dropdownList = document.getElementById("dropdownClassList");
+
     if (dropdownList) {
         dropdownList.innerHTML = filtered.slice(0, 15).map(animal => `
             <div class="dd-class-chip" onclick="selectAnimalClass('${animal}')">
@@ -114,24 +143,31 @@ function renderClassesLists(filterText = "") {
 
 renderClassesLists();
 
-// Search Handlers
-document.getElementById("pageClassSearch")?.addEventListener("input", (e) => {
+
+// SEARCH HANDLERS
+document.getElementById("pageClassSearch")?.addEventListener("input", e => {
     renderClassesLists(e.target.value);
 });
 
-document.getElementById("navClassSearch")?.addEventListener("input", (e) => {
+document.getElementById("navClassSearch")?.addEventListener("input", e => {
     renderClassesLists(e.target.value);
 });
+
 
 function selectAnimalClass(animal) {
     showPage("classifier");
-    document.querySelectorAll(".nav-item-dropdown").forEach(el => el.classList.remove("open"));
+
+    document.querySelectorAll(".nav-item-dropdown")
+        .forEach(el => el.classList.remove("open"));
 }
 
 
 // PAGE NAVIGATION SYSTEM
 function showPage(pageId) {
-    const validPage = document.getElementById(pageId) ? pageId : "home";
+
+    const validPage = document.getElementById(pageId)
+        ? pageId
+        : "home";
 
     document.querySelectorAll(".page-section").forEach(section => {
         section.classList.toggle("active", section.id === validPage);
@@ -143,27 +179,40 @@ function showPage(pageId) {
     });
 
     mainNav?.classList.remove("nav-open");
-    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
 }
 
-// Nav Link Click Listeners
+
+// NAV LINK CLICK LISTENERS
 document.querySelectorAll('a[href^="#"]').forEach(link => {
+
     link.addEventListener("click", event => {
+
         const pageId = link.getAttribute("href").slice(1);
+
         if (document.getElementById(pageId)) {
+
             event.preventDefault();
+
             history.replaceState(null, "", `#${pageId}`);
+
             showPage(pageId);
         }
     });
 });
 
-// Mobile Menu Toggle
+
+// MOBILE MENU TOGGLE
 mobileMenu?.addEventListener("click", () => {
     mainNav?.classList.toggle("nav-open");
 });
 
-// Initial Page Load & Hash Change
+
+// INITIAL PAGE LOAD
 showPage(location.hash.replace("#", "") || "home");
 
 window.addEventListener("hashchange", () => {
@@ -173,25 +222,41 @@ window.addEventListener("hashchange", () => {
 
 // RESET RESULT STATE
 function resetResult() {
+
     loadingState.classList.add("hidden");
+
     errorMessage.classList.add("hidden");
+
     predictionContent.classList.add("hidden");
+
     emptyState.classList.remove("hidden");
+
     topResults.classList.add("hidden");
+
     predictionList.innerHTML = "";
+
+    // Restore About Animal section for the next image
+    aboutAnimalSection?.classList.remove("hidden");
 }
 
+
 function showError(msg) {
+
     loadingState.classList.add("hidden");
+
     emptyState.classList.add("hidden");
+
     predictionContent.classList.add("hidden");
+
     errorMessage.textContent = msg;
+
     errorMessage.classList.remove("hidden");
 }
 
 
 // IMAGE UPLOAD HANDLING
 function displaySelectedImage(file) {
+
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
@@ -205,13 +270,19 @@ function displaySelectedImage(file) {
     }
 
     const reader = new FileReader();
+
     reader.onload = function(event) {
+
         imagePreview.src = event.target.result;
+
         resultImage.src = event.target.result;
+
         document.getElementById("fileName").textContent = file.name;
 
         uploadContent.classList.add("hidden");
+
         previewContainer.classList.remove("hidden");
+
         predictButton.disabled = false;
 
         resetResult();
@@ -224,160 +295,294 @@ function displaySelectedImage(file) {
     reader.readAsDataURL(file);
 }
 
+
 browseButton.addEventListener("click", () => imageInput.click());
 
+
 uploadArea.addEventListener("click", event => {
-    if (event.target.closest("button") || event.target.closest(".preview-container")) return;
+
+    if (
+        event.target.closest("button") ||
+        event.target.closest(".preview-container")
+    ) return;
+
     if (previewContainer.classList.contains("hidden")) {
         imageInput.click();
     }
 });
 
+
 imageInput.addEventListener("change", () => {
+
     const file = imageInput.files[0];
+
     if (file) displaySelectedImage(file);
 });
 
-// Drag & Drop
+
+// DRAG & DROP
 ["dragenter", "dragover"].forEach(name => {
+
     uploadArea.addEventListener(name, event => {
+
         event.preventDefault();
+
         uploadArea.classList.add("drag-over");
     });
 });
 
+
 ["dragleave", "drop"].forEach(name => {
+
     uploadArea.addEventListener(name, event => {
+
         event.preventDefault();
+
         uploadArea.classList.remove("drag-over");
     });
 });
 
+
 uploadArea.addEventListener("drop", event => {
+
     const file = event.dataTransfer.files[0];
+
     if (!file) return;
+
     const transfer = new DataTransfer();
+
     transfer.items.add(file);
+
     imageInput.files = transfer.files;
+
     displaySelectedImage(file);
 });
 
 
 // REMOVE IMAGE
 function removeSelectedImage() {
+
     imageInput.value = "";
+
     imagePreview.removeAttribute("src");
+
     resultImage.removeAttribute("src");
+
     previewContainer.classList.add("hidden");
+
     uploadContent.classList.remove("hidden");
+
     predictButton.disabled = true;
+
     resetResult();
 }
 
+
 removeImage.addEventListener("click", removeSelectedImage);
+
 tryAgainButton.addEventListener("click", removeSelectedImage);
 
 
 // FORMAT CONFIDENCE
 function formatConfidence(val) {
+
     let num = Number(val);
+
     if (!Number.isFinite(num)) return 0;
+
     if (num > 0 && num <= 1) num *= 100;
+
     return Math.max(0, Math.min(100, num));
 }
 
 
 // RENDER PREDICTION RESULTS
 function renderPrediction(data) {
-    const predictedAnimal = data.prediction || data.animal || data.class_name;
+
+    const predictedAnimal =
+        data.prediction || data.animal || data.class_name;
+
     if (!predictedAnimal) {
         throw new Error("The server response did not contain a prediction.");
     }
 
     const score = formatConfidence(data.confidence);
+
     const cleanName = titleCase(predictedAnimal);
 
     prediction.textContent = cleanName;
+
     confidence.textContent = `${score.toFixed(1)}%`;
+
     resultImage.src = imagePreview.src;
 
-    // Set description
-    const lookupKey = String(predictedAnimal).toLowerCase().trim();
-    animalDescription.textContent = animalDescriptions[lookupKey] || animalDescriptions.default;
 
-    // Alternatives
+    // CHECK IF IMAGE WAS REJECTED
+    const isRejected =
+        data.rejected === true ||
+        String(predictedAnimal).toLowerCase().trim() === "could not predict";
+
+
+    if (isRejected) {
+
+        // Hide the complete About Animal section
+        aboutAnimalSection?.classList.add("hidden");
+
+        // Hide alternative predictions
+        topResults.classList.add("hidden");
+
+        predictionList.innerHTML = "";
+
+        // Display rejected result
+        emptyState.classList.add("hidden");
+
+        errorMessage.classList.add("hidden");
+
+        loadingState.classList.add("hidden");
+
+        predictionContent.classList.remove("hidden");
+
+        return;
+    }
+
+
+    // RECOGNIZED ANIMAL
+    aboutAnimalSection?.classList.remove("hidden");
+
+    const lookupKey = String(predictedAnimal)
+        .toLowerCase()
+        .trim();
+
+    // Display animal description
+    animalDescription.textContent =
+        animalDescriptions[lookupKey] || animalDescriptions.default;
+
+
+    // ALTERNATIVE PREDICTIONS
     predictionList.innerHTML = "";
-    const alternatives = Array.isArray(data.top_predictions) ? data.top_predictions : [];
+
+    const alternatives = Array.isArray(data.top_predictions)
+        ? data.top_predictions
+        : [];
+
     const filtered = alternatives
         .filter(item => item && item.animal)
-        .filter(item => String(item.animal).toLowerCase() !== lookupKey)
+        .filter(item =>
+            String(item.animal).toLowerCase() !== lookupKey
+        )
         .slice(0, 3);
 
+
     if (filtered.length) {
+
         topResults.classList.remove("hidden");
+
         filtered.forEach(item => {
+
             const row = document.createElement("div");
+
             row.className = "alt-pill-item";
-            row.innerHTML = `<span>${titleCase(item.animal)}</span> <strong>${formatConfidence(item.confidence).toFixed(1)}%</strong>`;
+
+            row.innerHTML = `
+                <span>${titleCase(item.animal)}</span>
+                <strong>${formatConfidence(item.confidence).toFixed(1)}%</strong>
+            `;
+
             predictionList.appendChild(row);
         });
+
     } else {
+
         topResults.classList.add("hidden");
     }
 
+
+    // Show prediction result
     emptyState.classList.add("hidden");
+
     errorMessage.classList.add("hidden");
+
     loadingState.classList.add("hidden");
+
     predictionContent.classList.remove("hidden");
 }
 
 
 // PREDICT BUTTON API CALL
 predictButton.addEventListener("click", async () => {
+
     const file = imageInput.files[0];
+
     if (!file) {
         showError("Please choose an image before predicting.");
         return;
     }
 
+
     const formData = new FormData();
+
     formData.append("image", file);
 
+
     predictButton.disabled = true;
+
     buttonText.textContent = "Analyzing...";
 
     emptyState.classList.add("hidden");
+
     predictionContent.classList.add("hidden");
+
     errorMessage.classList.add("hidden");
+
     loadingState.classList.remove("hidden");
 
+
     try {
+
         const response = await fetch(API_URL, {
             method: "POST",
             body: formData
         });
 
+
         let data;
+
         try {
             data = await response.json();
         } catch {
             throw new Error("Server returned an unreadable response.");
         }
 
+
         if (!response.ok) {
-            throw new Error(data.error || data.message || `Prediction failed (HTTP ${response.status}).`);
+
+            throw new Error(
+                data.error ||
+                data.message ||
+                `Prediction failed (HTTP ${response.status}).`
+            );
         }
 
+
+        // Display prediction or rejection
         renderPrediction(data);
 
+
     } catch (error) {
+
         console.error("Prediction error:", error);
+
         const message = error.message.includes("Failed to fetch")
             ? "Could not connect to the prediction server. Please try again."
             : error.message;
+
         showError(message);
+
     } finally {
+
         predictButton.disabled = !imageInput.files[0];
+
         buttonText.textContent = "Predict Animal";
     }
+
 });
