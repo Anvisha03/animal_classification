@@ -15,7 +15,7 @@ CORS(
     resources={
         r"/*": {
             "origins": [
-                "https://animal-classification-1-0lng.onrender.com"
+               "https://animal-classification-kaq8.onrender.com"
             ]
         }
     },
