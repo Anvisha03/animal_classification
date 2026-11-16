@@ -8,7 +8,20 @@ from PIL import Image
 from pathlib import Path
 
 app = Flask(__name__)
-CORS(app)
+
+# Allow the deployed frontend to communicate with the backend
+CORS(
+    app,
+    resources={
+        r"/*": {
+            "origins": [
+                "https://animal-classification-1-0lng.onrender.com"
+            ]
+        }
+    },
+    methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type"]
+)
 
 # Project paths
 BASE_DIR = Path(__file__).resolve().parent
